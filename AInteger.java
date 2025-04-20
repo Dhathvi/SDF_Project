@@ -36,8 +36,21 @@ public class AInteger {
         return new AInteger(result.toString());
     }
 
-    public AInteger subtract (AInteger val) {
+    public AInteger sub (AInteger val) {
         BigInteger result = this.value.subtract(val.value);
+        return new AInteger(result.toString());
+    }
+
+    public AInteger mul (AInteger val) {
+        BigInteger result = this.value.multiply(val.value);
+        return new AInteger(result.toString());
+    }
+
+    public AInteger div(AInteger val) {
+        if (val.value.equals(BigInteger.ZERO)) {
+            throw new ArithmeticException("Division by zero");
+        }
+        BigInteger result = this.value.divide(val.value);
         return new AInteger(result.toString());
     }
     
