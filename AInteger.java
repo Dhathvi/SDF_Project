@@ -15,7 +15,13 @@ public class AInteger {
     }
 
     // 3. Copy constructor
-    public AInteger(AInteger other) {
-        this.value = other.value;
+    public AInteger(AInteger val) {
+        this.value = val.value;
     }
+
+    // static function that returns an instance of AInteger class.
+    public static AInteger parse(String s) {
+        return new AInteger(s);
+    }
+
 }
