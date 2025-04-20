@@ -1,36 +1,38 @@
 package arbitaryarithmetic;
 
+import java.math.BigInteger;
+
 public class AInteger {
     
-    private long value;
+    private BigInteger value;
 
-    // 1.Default constructor
+    // Default Constructor
     public AInteger() {
-        this.value = 0;
+        this.value = BigInteger.ZERO;
     }
 
-    // 2. Constructor that takes a String
+    // Constructor from String
     public AInteger(String s) {
         try {
-            this.value = Long.parseLong(s);
+            this.value = new BigInteger(s.trim());
         } catch (NumberFormatException e) {
-                System.out.println("Invalid input: '" + s + "' is not a valid long. Setting value to 0.");
-            this.value = 0; // default fallback
+            System.err.println("Invalid BigInteger format: " + s);
+            this.value = BigInteger.ZERO;
         }
     }
 
-    // 3. Copy constructor
-    public AInteger(AInteger val) {
-        this.value = val.value;
+    // Copy Constructor
+    public AInteger(AInteger other) {
+        this.value = other.value;
     }
 
-    // static function that returns an instance of AInteger class.
+    // Static parse method
     public static AInteger parse(String s) {
         return new AInteger(s);
     }
 
     public AInteger add (AInteger val) {
-        re
+        return new AInteger(Integer.toString(this.value + val.value));
     }
 
 }
