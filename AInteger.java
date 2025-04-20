@@ -11,7 +11,12 @@ public class AInteger {
 
     // 2. Constructor that takes a String
     public AInteger(String s) {
-        this.value = Long.parseLong(s);
+        try {
+            this.value = Long.parseLong(s);
+        } catch (NumberFormatException e) {
+                System.out.println("Invalid input: '" + s + "' is not a valid long. Setting value to 0.");
+            this.value = 0; // default fallback
+        }
     }
 
     // 3. Copy constructor
@@ -22,6 +27,10 @@ public class AInteger {
     // static function that returns an instance of AInteger class.
     public static AInteger parse(String s) {
         return new AInteger(s);
+    }
+
+    public AInteger add (AInteger val) {
+        re
     }
 
 }
