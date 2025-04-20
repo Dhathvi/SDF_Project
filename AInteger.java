@@ -32,7 +32,13 @@ public class AInteger {
     }
 
     public AInteger add (AInteger val) {
-        return new AInteger(Integer.toString(this.value + val.value));
+        BigInteger result = this.value.add(val.value);
+        return new AInteger(result.toString());
     }
 
+    public AInteger subtract (AInteger val) {
+        BigInteger result = this.value.subtract(val.value);
+        return new AInteger(result.toString());
+    }
+    
 }
