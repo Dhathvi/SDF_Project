@@ -1,24 +1,17 @@
 package arbitaryarithmetic;
 
-import java.math.BigInteger;
-
 public class AInteger {
     
-    private BigInteger value;
+    private String value;
 
     // Default Constructor
     public AInteger() {
-        this.value = BigInteger.ZERO;
+        this.value = "0";
     }
 
     // Constructor from String
     public AInteger(String s) {
-        try {
-            this.value = new BigInteger(s.trim());
-        } catch (NumberFormatException e) {
-            System.err.println("Invalid BigInteger format: " + s);
-            this.value = BigInteger.ZERO;
-        }
+        this.value=s;
     }
 
     // Copy Constructor
@@ -31,27 +24,11 @@ public class AInteger {
         return new AInteger(s);
     }
 
-    public AInteger add (AInteger val) {
-        BigInteger result = this.value.add(val.value);
-        return new AInteger(result.toString());
+    public String getvalue(){
+        return this.value;
     }
 
-    public AInteger sub (AInteger val) {
-        BigInteger result = this.value.subtract(val.value);
-        return new AInteger(result.toString());
+    public AInteger add(AInteger val){
+        
     }
-
-    public AInteger mul (AInteger val) {
-        BigInteger result = this.value.multiply(val.value);
-        return new AInteger(result.toString());
-    }
-
-    public AInteger div(AInteger val) {
-        if (val.value.equals(BigInteger.ZERO)) {
-            throw new ArithmeticException("Division by zero");
-        }
-        BigInteger result = this.value.divide(val.value);
-        return new AInteger(result.toString());
-    }
-    
 }
