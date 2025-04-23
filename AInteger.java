@@ -157,8 +157,6 @@ public class AInteger {
             return new AInteger("0"); // If either number is 0, return 0
         }
 
-        StringBuilder result = new StringBuilder();
-
         num1 = new StringBuilder(num1).reverse().toString(); // Reverse the first number
         num2 = new StringBuilder(num2).reverse().toString(); // Reverse the second number
 
