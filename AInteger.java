@@ -149,4 +149,43 @@ public class AInteger {
  
     }
 
+    public AInteger mul(AInteger val) {
+        String num1 = this.value;
+        String num2 = val.value;
+
+        if (num1.equals("0") || num2.equals("0")) {
+            return new AInteger("0"); // If either number is 0, return 0
+        }
+
+        StringBuilder result = new StringBuilder();
+
+        num1 = new StringBuilder(num1).reverse().toString(); // Reverse the first number
+        num2 = new StringBuilder(num2).reverse().toString(); // Reverse the second number
+
+        int[] result = new int[num1.length() + num2.length()];
+
+        // Perform digit-by-digit multiplication
+        for (int i = num1.length() - 1; i >= 0; i--) {
+            for (int j = num2.length() - 1; j >= 0; j--) {
+                int product = (num1.charAt(i) - '0') * (num2.charAt(j) - '0'); // Multiply the digits
+                int sum = product + result[i + j + 1]; // Add the product to the corresponding position in the result array
+
+                result[i + j + 1] = sum % 10; // Store the current digit (sum modulo 10)
+                result[i + j] += sum / 10; // Handle the carry by adding it to the previous position
+            }
+        }
+
+        // Convert the result array to a string
+        StringBuilder resultStr = new StringBuilder();
+        for (int num : result) {
+            // Skip leading zeroes
+            if (!(resultStr.length() == 0 && num == 0)) {
+                resultStr.append(num); // Append each non-zero digit
+            }
+        }
+
+        // Return the result as a new AInteger
+        return new AInteger(resultStr.length() == 0 ? "0" : resultStr.toString());
+    }
+
 }
