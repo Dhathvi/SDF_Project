@@ -66,10 +66,13 @@ public class AInteger {
         String Onum1 = this.value;
         String Onum2 = val.value;
 
-        StringBuilder result= new StringBuilder();
+        if (Onum1.equals(Onum2)) {
+            return new AInteger("0");
+        }
 
-        String num1 = new StringBuilder(Onum1).reverse().toString(); // Reverse the first number
-        String num2 = new StringBuilder(Onum2).reverse().toString(); // Reverse the second number
+
+        String num1 = Onum1;
+        String num2 = Onum2;
 
         int k=0;
         if (num1.length() > num2.length()){
@@ -94,58 +97,41 @@ public class AInteger {
             }
        }
 
-        if (k==1){
-             // To store the result of subtraction
-            int borrow = 0; // Borrow value for subtraction
-            int maxLength = num1.length(); // Max length of num1 (since num1 >= num2, no need to check length of num2)
-
-        // Loop over the digits, performing subtraction with borrow
-            for (int i = 0; i < maxLength; i++) {
-                // Get the digits from both numbers, considering borrow
-                int digit1 = num1.charAt(maxLength - 1 - i) - '0';
-                int digit2 = i < num2.length() ? num2.charAt(num2.length() - 1 - i) - '0' : 0;
-
-            // Perform subtraction, considering the borrow from the previous step
-                int diff = digit1 - digit2 - borrow;
-                if (diff < 0) {
-                    diff += 10; // If the result is negative, adjust by adding 10
-                    borrow = 1; // Set borrow to 1 for the next digit
-                } else {
-                    borrow = 0; // Reset borrow if subtraction was successful
-                }
-
-                result.append(diff); // Append the result of the subtraction
-            }
-            return new AInteger(result.reverse().toString());
-        }
-
-        if (k==-1){
-            // To store the result of subtraction
-           int borrow = 0; // Borrow value for subtraction
-           int maxLength = num2.length(); // Max length of num1 (since num1 >= num2, no need to check length of num2)
-
-       // Loop over the digits, performing subtraction with borrow
-           for (int i = 0; i < maxLength; i++) {
-               // Get the digits from both numbers, considering borrow
-               int digit1 = num2.charAt(maxLength - 1 - i) - '0';
-               int digit2 = i < num1.length() ? num1.charAt(num1.length() - 1 - i) - '0' : 0;
-
-           // Perform subtraction, considering the borrow from the previous step
-               int diff = digit1 - digit2 - borrow;
-               if (diff < 0) {
-                   diff += 10; // If the result is negative, adjust by adding 10
-                   borrow = 1; // Set borrow to 1 for the next digit
-               } else {
-                   borrow = 0; // Reset borrow if subtraction was successful
-               }
-
-               result.append(diff); // Append the result of the subtraction
-           }
-           
-           return new AInteger(result.reverse().toString());
+       if (k==-1){
+            String tmp = num1;
+            num1 = num2;
+            num2 = tmp;
        }
 
-        return new AInteger("0");
+       StringBuilder result = new StringBuilder();
+       int borrow = 0;
+       int i = num1.length() - 1;
+       int j = num2.length() - 1;
+
+       while (i >= 0) {
+            int digit1 = num1.charAt(i) - '0';
+            int digit2 = (j >= 0 ? num2.charAt(j) - '0' : 0);
+            int diff = digit1 - digit2 - borrow;
+            if (diff < 0) {
+                diff += 10;
+                borrow = 1;
+            } else {
+                borrow = 0;
+            }
+            result.append(diff);
+            i--; j--;
+        }
+
+        // Remove leading zeros in the reversed result
+        while (result.length() > 1 && result.charAt(result.length() - 1) == '0') {
+            result.setLength(result.length() - 1);
+        }
+
+        if (k==-1) {
+            result.append('-');
+        }
+        
+       return new AInteger(result.reverse().toString());
  
     }
 
@@ -156,9 +142,6 @@ public class AInteger {
         if (num1.equals("0") || num2.equals("0")) {
             return new AInteger("0"); // If either number is 0, return 0
         }
-
-        num1 = new StringBuilder(num1).reverse().toString(); // Reverse the first number
-        num2 = new StringBuilder(num2).reverse().toString(); // Reverse the second number
 
         int[] result = new int[num1.length() + num2.length()];
 
@@ -184,6 +167,11 @@ public class AInteger {
 
         // Return the result as a new AInteger
         return new AInteger(resultStr.length() == 0 ? "0" : resultStr.toString());
+    }
+
+    public AInteger div(AInteger val){
+
+        
     }
 
 }
