@@ -28,6 +28,42 @@ public class AInteger {
         return this.value;
     }
 
+    public int compare(AInteger val){
+        String num1 = this.value;
+        String num2 = val.value;
+
+        int k=0;
+        if (num1.length() > num2.length()){
+            k=1;
+        }
+        if(num1.length() < num2.length()){
+            k=-1;
+        }
+
+        if (k==0){
+            for (int i=0; i < num1.length();i++) {
+                int digit1 = num1.charAt(i)-'0';
+                int digit2 = num2.charAt(i)-'0';
+                if (digit1>digit2){
+                    k=1;
+                    break;
+                }
+                if(digit2>digit1){
+                    k=-1;
+                    break;
+                }
+            }
+       }
+       return k;
+    }
+
+    private static StringBuilder removeleadingzeros(StringBuilder str){
+        while (str.length() > 1 && str.charAt(0) == '0') {
+            str.deleteCharAt(0);
+        }
+        return str;
+    }
+
     public AInteger add(AInteger val){
         String num1 = this.value;
         String num2 = val.value;
@@ -63,39 +99,14 @@ public class AInteger {
     }
 
     public AInteger sub(AInteger val){
-        String Onum1 = this.value;
-        String Onum2 = val.value;
+        String num1 = this.value;
+        String num2 = val.value;
 
-        if (Onum1.equals(Onum2)) {
+        if (num1.equals(num2)) {
             return new AInteger("0");
         }
 
-
-        String num1 = Onum1;
-        String num2 = Onum2;
-
-        int k=0;
-        if (num1.length() > num2.length()){
-            k=1;
-        }
-        if(num1.length() < num2.length()){
-            k=-1;
-        }
-
-        if (k==0){
-            for (int i=0; i < num1.length();i++) {
-                int digit1 = num1.charAt(i);
-                int digit2 = num2.charAt(i);
-                if (digit1>digit2){
-                    k=1;
-                    break;
-                }
-                if(digit2>digit1){
-                    k=-1;
-                    break;
-                }
-            }
-       }
+        int k=compare(val);
 
        if (k==-1){
             String tmp = num1;
@@ -122,16 +133,15 @@ public class AInteger {
             i--; j--;
         }
 
-        // Remove leading zeros in the reversed result
-        while (result.length() > 1 && result.charAt(result.length() - 1) == '0') {
-            result.setLength(result.length() - 1);
-        }
+        result.reverse();
+
+        removeleadingzeros(result);
 
         if (k==-1) {
-            result.append('-');
+            result.insert(0, '-');
         }
         
-       return new AInteger(result.reverse().toString());
+       return new AInteger(result.toString());
  
     }
 
@@ -170,8 +180,39 @@ public class AInteger {
     }
 
     public AInteger div(AInteger val){
+        String Dividend = this.value;
+        String Divisor = val.value;
 
-        
+        if (Divisor.equals("0")) {
+            throw new ArithmeticException("Division by zero");
+        }
+    
+        StringBuilder quotient = new StringBuilder();
+        String current = "";
+
+        for (int i = 0; i < Dividend.length(); i++) {
+            current += Dividend.charAt(i);
+
+            // Remove leading zeros
+            current = current.replaceFirst("^0+", "");
+            if (current.equals("")) current = "0";
+
+            int x = 0;
+            AInteger curInt = new AInteger(current);
+            AInteger divInt = new AInteger(Divisor);
+            
+            while (curInt.compare(divInt) >= 0) {
+                curInt = curInt.sub(divInt);
+                x++;
+            }
+
+            quotient.append(x);
+            current = curInt.getvalue();
+        }
+
+        String result = removeleadingzeros(quotient).toString();
+        return new AInteger(result);
+
     }
 
 }
