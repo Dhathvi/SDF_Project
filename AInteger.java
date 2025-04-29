@@ -3,20 +3,45 @@ package arbitaryarithmetic;
 public class AInteger {
     
     private String value;
+    private Boolean isNegative;
 
     // Default Constructor
     public AInteger() {
         this.value = "0";
+        this.isNegative = false;
     }
 
     // Constructor from String
     public AInteger(String s) {
-        this.value=s;
+        if (s == null || s.isEmpty()) {
+            value = "0";
+            isNegative = false;
+            return;
+        }
+    
+        if (s.charAt(0) == '-') {
+            isNegative = true;
+            value = s.substring(1);
+        } else if (s.charAt(0) == '+') {
+            isNegative = false;
+            value = s.substring(1);
+        } else {
+            isNegative = false;
+            value = s;
+        }
+    
+        value = removeLeadingZeros(new StringBuilder(value)).toString();
+    
+        if (value.equals("0")) {
+            isNegative = false; // normalize zero to be always non-negative
+        }
     }
+    
 
     // Copy Constructor
     public AInteger(AInteger other) {
         this.value = other.value;
+        this.isNegative = other.isNegative;
     }
 
     // Static parse method
@@ -24,49 +49,52 @@ public class AInteger {
         return new AInteger(s);
     }
 
-    public String getvalue(){
-        return this.value;
+    public String getValue(){
+        return (isNegative ? "-" : "") + value;
     }
 
-    public int compare(AInteger val){
-        String num1 = this.value;
-        String num2 = val.value;
+    private static int compareUnsigned(AInteger a, AInteger b){
+        String num1 = a.value;
+        String num2 = b.value;
 
-        int k=0;
         if (num1.length() > num2.length()){
-            k=1;
+            return 1;
         }
         if(num1.length() < num2.length()){
-            k=-1;
+            return -1;
         }
 
-        if (k==0){
-            for (int i=0; i < num1.length();i++) {
-                int digit1 = num1.charAt(i)-'0';
-                int digit2 = num2.charAt(i)-'0';
-                if (digit1>digit2){
-                    k=1;
-                    break;
-                }
-                if(digit2>digit1){
-                    k=-1;
-                    break;
-                }
+        for (int i=0; i < num1.length();i++) {
+            int digit1 = num1.charAt(i)-'0';
+            int digit2 = num2.charAt(i)-'0';
+            if (digit1>digit2){
+                return 1;
             }
-       }
-       return k;
+            if(digit2>digit1){
+                return -1;
+            }
+        }
+       return 0;
     }
 
-    private static StringBuilder removeleadingzeros(StringBuilder str){
+    public int compare(AInteger val) {
+        if (this.isNegative && !val.isNegative) return -1;
+        if (!this.isNegative && val.isNegative) return 1;
+    
+        int cmp = compareUnsigned(this, val);
+        return this.isNegative ? -cmp : cmp;
+    }
+
+    private static StringBuilder removeLeadingZeros(StringBuilder str){
         while (str.length() > 1 && str.charAt(0) == '0') {
             str.deleteCharAt(0);
         }
         return str;
     }
 
-    public AInteger add(AInteger val){
-        String num1 = this.value;
-        String num2 = val.value;
+    private static AInteger addUnsigned(AInteger a, AInteger b){
+        String num1 = a.value;
+        String num2 = b.value;
 
         int carry=0;
         StringBuilder result= new StringBuilder();
@@ -98,30 +126,20 @@ public class AInteger {
         return new AInteger(result.reverse().toString());
     }
 
-    public AInteger sub(AInteger val){
-        String num1 = this.value;
-        String num2 = val.value;
-
-        if (num1.equals(num2)) {
-            return new AInteger("0");
-        }
-
-        int k=compare(val);
-
-       if (k==-1){
-            String tmp = num1;
-            num1 = num2;
-            num2 = tmp;
-       }
-
-       StringBuilder result = new StringBuilder();
-       int borrow = 0;
-       int i = num1.length() - 1;
-       int j = num2.length() - 1;
-
-       while (i >= 0) {
+    private static AInteger subUnsigned(AInteger a, AInteger b) {
+        String num1 = a.value;
+        String num2 = b.value;
+    
+        StringBuilder result = new StringBuilder();
+        int borrow = 0;
+    
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+    
+        while (i >= 0) {
             int digit1 = num1.charAt(i) - '0';
-            int digit2 = (j >= 0 ? num2.charAt(j) - '0' : 0);
+            int digit2 = (j >= 0) ? num2.charAt(j) - '0' : 0;
+    
             int diff = digit1 - digit2 - borrow;
             if (diff < 0) {
                 diff += 10;
@@ -129,25 +147,21 @@ public class AInteger {
             } else {
                 borrow = 0;
             }
+    
             result.append(diff);
-            i--; j--;
+            i--;
+            j--;
         }
-
+    
         result.reverse();
-
-        removeleadingzeros(result);
-
-        if (k==-1) {
-            result.insert(0, '-');
-        }
-        
-       return new AInteger(result.toString());
- 
+        removeLeadingZeros(result);
+    
+        return new AInteger(result.toString());
     }
 
-    public AInteger mul(AInteger val) {
-        String num1 = this.value;
-        String num2 = val.value;
+    private static AInteger mulUnsigned(AInteger a, AInteger b) {
+        String num1 = a.value;
+        String num2 = b.value;
 
         if (num1.equals("0") || num2.equals("0")) {
             return new AInteger("0"); // If either number is 0, return 0
@@ -179,19 +193,19 @@ public class AInteger {
         return new AInteger(resultStr.length() == 0 ? "0" : resultStr.toString());
     }
 
-    public AInteger div(AInteger val){
-        String Dividend = this.value;
-        String Divisor = val.value;
+    private static AInteger divUnsigned(AInteger a, AInteger b){
+        String dividend = a.value;
+        String divisor = b.value;
 
-        if (Divisor.equals("0")) {
+        if (divisor.equals("0")) {
             throw new ArithmeticException("Division by zero");
         }
     
         StringBuilder quotient = new StringBuilder();
         String current = "";
 
-        for (int i = 0; i < Dividend.length(); i++) {
-            current += Dividend.charAt(i);
+        for (int i = 0; i < dividend.length(); i++) {
+            current += dividend.charAt(i);
 
             // Remove leading zeros
             current = current.replaceFirst("^0+", "");
@@ -199,20 +213,62 @@ public class AInteger {
 
             int x = 0;
             AInteger curInt = new AInteger(current);
-            AInteger divInt = new AInteger(Divisor);
+            AInteger divInt = new AInteger(divisor);
             
-            while (curInt.compare(divInt) >= 0) {
-                curInt = curInt.sub(divInt);
+            while (compareUnsigned(curInt, divInt) >= 0) {
+                curInt = subUnsigned(curInt, divInt);
                 x++;
             }
 
             quotient.append(x);
-            current = curInt.getvalue();
+            current = curInt.getValue();
         }
 
-        String result = removeleadingzeros(quotient).toString();
+        String result = removeLeadingZeros(quotient).toString();
         return new AInteger(result);
 
     }
+
+    public AInteger add(AInteger val) {
+        if (this.isNegative == val.isNegative) {
+            // Same signs: perform addition and preserve the sign
+            AInteger result = addUnsigned(this, val);
+            result.isNegative = this.isNegative;
+            return result;
+        } else {
+            // Opposite signs: perform subtraction
+            if (compareUnsigned(this, val) >= 0) {
+                AInteger result = subUnsigned(this, val);
+                result.isNegative = this.isNegative;
+                return result;
+            } else {
+                AInteger result = subUnsigned(val, this);
+                result.isNegative = val.isNegative;
+                return result;
+            }
+        }
+    }
+
+    public AInteger sub(AInteger val) {
+        AInteger negVal = new AInteger(val);
+        negVal.isNegative = !val.isNegative;
+        return this.add(negVal);
+    }
+
+    public AInteger mul(AInteger val) {
+        AInteger result = mulUnsigned(this, val);
+        result.isNegative = this.isNegative != val.isNegative;
+        return result;
+    }
+
+    public AInteger div(AInteger val) {
+        if (val.value.equals("0")) {
+            throw new ArithmeticException("Division by zero");
+        }
+    
+        AInteger result = divUnsigned(this, val);
+        result.isNegative = this.isNegative != val.isNegative;
+        return result;
+    }    
 
 }
