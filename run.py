@@ -14,7 +14,7 @@ if os.system(compileCmd) !=0:
 
 #verifying Inputformat and running the program
 if len(sys.argv) !=5:
-    print("Usage: java myInfArith <int|float> <add|sub|mul|div> <op1> <op2>")
+    print("Usage: python run.py <int|float> <add|sub|mul|div> <op1> <op2>")
     sys.exit(1)
 
 _type , op, a, b = sys.argv[1:]
