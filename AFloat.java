@@ -1,5 +1,7 @@
 package arbitaryarithmetic;
 
+import java.nio.channels.spi.AbstractInterruptibleChannel;
+
 public class AFloat {
     
     private AInteger intPart;
@@ -71,16 +73,16 @@ public class AFloat {
             fracStr = "0" + fracStr;
         }
 
-        String val = intPart.getValue() + (scale > 0 ? "." + fracStr : "");
-        return (isNegative && !val.equals("0")) ? "-" + val : val;
+        String val = intPart.getValue() + (scale > 0 ? "." + fracStr : ".0");
+        return (isNegative && !val.equals("0.0")) ? "-" + val : val;
     }
 
     private static AFloat assignScale(AFloat a, AFloat b){
         AFloat result = new AFloat(a);
         int diff = a.scale - b.scale;
         if (diff > 0) {
-            result.fracPart = new AInteger(a.fracPart.getValue() + "0".repeat(diff));
-            result.scale = b.scale + diff;
+            result.fracPart = new AInteger(a.fracPart.getValue());
+            result.scale = a.scale;
         } else if (diff < 0) {
             result.fracPart = new AInteger(a.fracPart.getValue() + "0".repeat(-diff));
             result.scale = b.scale;
@@ -121,6 +123,67 @@ public class AFloat {
         return this.add(neg);
     }
 
-    
+    public AFloat mul(AFloat val){
+        String fracStr = this.fracPart.getValue();
+        while (fracStr.length()<this.scale) {
+            fracStr = "0" + fracStr;
+        }
+
+        String a = this.intPart.getValue() + fracStr;
+
+        String fracStr2 = val.fracPart.getValue();
+        while (fracStr2.length()<val.scale) {
+            fracStr2 = "0" + fracStr2;
+        }
+
+        String b = val.intPart.getValue() + fracStr2;
+
+        AInteger aInt = new AInteger(a);
+        AInteger bInt = new AInteger(b);
+
+        AInteger product = aInt.mul(bInt);
+        int totalScale = this.scale + val.scale;
+
+        String producStr = product.getValue();
+
+        while (producStr.length()< totalScale + 1) {
+            producStr = "0" + producStr;
+        }
+
+        String intPartStr = producStr.substring(0, producStr.length() - totalScale);
+        String fracPartStr = producStr.substring(producStr.length() - totalScale);
+
+        while (fracPartStr.length() > 1 && fracPartStr.endsWith("0")) {
+            fracPartStr = fracPartStr.substring(0, fracPartStr.length() - 1);
+        }
+
+        AFloat result = new AFloat();
+        result.intPart = new AInteger(intPartStr);
+        result.fracPart = new AInteger(fracPartStr);
+        result.scale = fracPartStr.length();
+        result.isNegative = this.isNegative != val.isNegative;
+
+        return result;
+    }
+
+    public AFloat div(AFloat val){
+        if (val.intPart.getValue().equals("0") && val.fracPart.getValue().equals("0")){
+            throw new ArithmeticException("Division by zero");
+        }
+
+        String fracStr = this.fracPart.getValue();
+        while (fracStr.length()<this.scale) {
+            fracStr = "0" + fracStr;
+        }
+
+        String a = this.intPart.getValue() + fracStr;
+
+        String fracStr2 = val.fracPart.getValue();
+        while (fracStr2.length()<val.scale) {
+            fracStr2 = "0" + fracStr2;
+        }
+
+        String b = val.intPart.getValue() + fracStr2;
+    }
 
 }
