@@ -110,7 +110,7 @@ public class AFloat {
         while (fracPartStr.length() > 1 && fracPartStr.endsWith("0")) {
             fracPartStr = fracPartStr.substring(0, fracPartStr.length() - 1);
         }
-        
+
         AFloat finalRes = new AFloat();
         finalRes.intPart = new AInteger(intPartStr);
         finalRes.fracPart = new AInteger(fracPartStr);
@@ -126,19 +126,23 @@ public class AFloat {
     }
 
     public AFloat mul(AFloat val){
+        String a = this.intPart.getValue();
+    if (this.scale > 0) {
         String fracStr = this.fracPart.getValue();
-        while (fracStr.length()<this.scale) {
+        while (fracStr.length() < this.scale) {
             fracStr = "0" + fracStr;
         }
+        a += fracStr;
+    }
 
-        String a = this.intPart.getValue() + fracStr;
-
-        String fracStr2 = val.fracPart.getValue();
-        while (fracStr2.length()<val.scale) {
-            fracStr2 = "0" + fracStr2;
+        String b = this.intPart.getValue();
+        if (this.scale > 0) {
+            String fracStr = this.fracPart.getValue();
+            while (fracStr.length() < this.scale) {
+                fracStr = "0" + fracStr;
+            }
+            b += fracStr;
         }
-
-        String b = val.intPart.getValue() + fracStr2;
 
         AInteger aInt = new AInteger(a);
         AInteger bInt = new AInteger(b);
