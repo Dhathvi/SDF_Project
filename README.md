@@ -44,7 +44,7 @@ Like, even if the number has 50 digits or decimal with 30 places, still this wil
         for floats
             java myInfArith float div 1.234 0.0001
 
-    Using Python "if you're lazy 😁"
+    Using Python "if you're lazy 😁 or if you don't know how to compile using java."
 
         for int
             python3 run.py int mul 99999 88888
