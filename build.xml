@@ -24,7 +24,10 @@
     </target>
 
     <target name="run" depends="build">
-        <java classname="myInfArith" fork="true" classpath="${build}">
+        <java classname="myInfArith" fork="true">
+            <classpath>
+                <pathelement path="${build.dir}" />
+            </classpath>
             <arg value="int" />
             <arg value="add" />
             <arg value="123" />
