@@ -1,5 +1,5 @@
-import os
-import sys
+import os #to interact with os
+import sys #to interact with command line
 import subprocess
 
 
