@@ -1,25 +1,26 @@
 <project name = "ArbitaryArithmetic" default = "build" basedir = ".">
-    <property name="src" value = "." />
-    <property name="build" value = "build/classes" />
+    <property name="src.dir" value = "." />
+    <property name="build.dir" value = "build/classes" />
     <property name="jarfile" value = "aarithmetic.jar" />
 
     <target name = "clean">
-        <delete dir = "${build}" />
+        <delete dir = "${build.dir}" />
         <delete file = "${jarfile}" />
     </target>
 
     <target name = "init">
-        <mkdir dir = "${build}"/>
+        <mkdir dir = "${build.dir}"/>
     </target>
 
-    <target name = "build">
-        <javac srcdir="${src}" destdir="${build}">
+    <target name = "build" depends = "init">
+        <javac destdir="${build.dir}">
+            <src path = "${src.dir}" />
             <include name="**/*.java" />
         </javac>
     </target>
 
     <target name = "jar" depends = "build">
-        <jar destfile = "${jarfile}" basedir = "${build}" />
+        <jar destfile = "${jarfile}" basedir = "${build.dir}" />
     </target>
 
     <target name="run" depends="build">
