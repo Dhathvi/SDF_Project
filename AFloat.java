@@ -1,7 +1,5 @@
 package arbitaryarithmetic;
 
-import java.nio.channels.spi.AbstractInterruptibleChannel;
-
 public class AFloat {
     
     private AInteger intPart;
@@ -79,12 +77,11 @@ public class AFloat {
 
     private static AFloat assignScale(AFloat a, AFloat b){
         AFloat result = new AFloat(a);
-        int diff = a.scale - b.scale;
+        int diff = b.scale - a.scale;
         if (diff > 0) {
-            result.fracPart = new AInteger(a.fracPart.getValue());
-            result.scale = a.scale;
-        } else if (diff < 0) {
-            result.fracPart = new AInteger(a.fracPart.getValue() + "0".repeat(-diff));
+            String frac = a.fracPart.getValue();
+            frac += "0".repeat(diff);
+            result.fracPart = new AInteger(frac);
             result.scale = b.scale;
         }
         return result;
@@ -109,6 +106,11 @@ public class AFloat {
 
         String intPartStr = resStr.substring(0, resStr.length() - a.scale);
         String fracPartStr = resStr.substring(resStr.length() - a.scale);
+
+        while (fracPartStr.length() > 1 && fracPartStr.endsWith("0")) {
+            fracPartStr = fracPartStr.substring(0, fracPartStr.length() - 1);
+        }
+        
         AFloat finalRes = new AFloat();
         finalRes.intPart = new AInteger(intPartStr);
         finalRes.fracPart = new AInteger(fracPartStr);
@@ -184,6 +186,33 @@ public class AFloat {
         }
 
         String b = val.intPart.getValue() + fracStr2;
+
+        int changedScale = this.scale - val.scale + 30;
+
+        AInteger dividend = new AInteger(a + "0".repeat(changedScale));
+        AInteger divisor = new AInteger(b);
+
+        AInteger quot = dividend.div(divisor);
+        String qStr = quot.getValue();
+
+        while (qStr.length() < 31) qStr = "0" + qStr;
+
+        String intPartStr = qStr.substring(0, qStr.length() - 30);
+        String fracPartStr = qStr.substring(qStr.length() - 30);
+
+        // Trim trailing zeros but preserve at least one digit
+        while (fracPartStr.length() > 1 && fracPartStr.endsWith("0")) {
+            fracPartStr = fracPartStr.substring(0, fracPartStr.length() - 1);
+        }
+
+        AFloat result = new AFloat();
+        result.intPart = new AInteger(intPartStr);
+        result.fracPart = new AInteger(fracPartStr);
+        result.scale = fracPartStr.length();
+        result.isNegative = this.isNegative != val.isNegative;
+
+        return result;
+
     }
 
 }
