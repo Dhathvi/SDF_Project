@@ -135,10 +135,10 @@ public class AFloat {
         a += fracStr;
     }
 
-        String b = this.intPart.getValue();
-        if (this.scale > 0) {
-            String fracStr = this.fracPart.getValue();
-            while (fracStr.length() < this.scale) {
+        String b = val.intPart.getValue();
+        if (val.scale > 0) {
+            String fracStr = val.fracPart.getValue();
+            while (fracStr.length() < val.scale) {
                 fracStr = "0" + fracStr;
             }
             b += fracStr;
