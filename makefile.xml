@@ -1,0 +1,33 @@
+<project name = "ArbitaryArithmetic" default = "build" basedir = ".">
+    <property name="src" value = "." />
+    <property name="build" value = "buil/classes" />
+    <property name="jarfile" value = "aarithmetic.jar" />
+
+    <target name = "clean">
+        <delete dir = "${build}" />
+        <delete file = "${jarfile}" />
+    </target>
+
+    <target name = "init">
+        <mkdir dir = "${build}"/>
+    </target>
+
+    <target name = "build">
+        <javac srcdir="${src}" destdir="${build}">
+            <include name="**/*.java" />
+        </javac>
+    </target>
+
+    <target name = "jar" depends = "build">
+        <jar destfile = "${jarfile}" basedir = "${build}" />
+    </target>
+
+    <target name="run" depends="build">
+        <java classname="myInfArith" fork="true" classpath="${build}">
+            <arg value="int" />
+            <arg value="add" />
+            <arg value="123" />
+            <arg value="456" />
+        </java>
+    </target>
+</project>
