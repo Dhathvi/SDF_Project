@@ -1,42 +1,30 @@
-<project name = "ArbitaryArithmetic" default = "build" basedir = ".">
-    <property name="src.dir" value = "." />
-    <property name="build.dir" value = "build/classes" />  <!-- Defining where to store compiled class files -->
-    <property name="jarfile" value = "aarithmetic.jar" />
+<project name="MyArithProject" default="jar" basedir=".">
 
-    <!-- Defining the target clean which deletes all compiled .class files and the jar file -->
-    <target name = "clean">
-        <delete dir = "${build.dir}" />
-        <delete file = "${jarfile}" />
-    </target>
-
-    <!-- Defining the target init to create build directory if it doesnot exist -->
-    <target name = "init">
-        <mkdir dir = "${build.dir}"/>
-    </target>
-
-    <!-- Defining the target build which compiles all the .java files  -->
-    <target name = "build" depends = "init">
-        <javac destdir="${build.dir}">
-            <src path = "${src.dir}" />
-            <include name="**/*.java" />
+    <!-- Compile all necessary classes -->
+    <target name="compile">
+        <javac srcdir="." destdir="." includeantruntime="false">
+            <include name="arbitaryarithmetic/AInteger.java"/>
+            <include name="arbitaryarithmetic/AFloat.java"/>
+            <include name="myInfArith.java"/>
         </javac>
     </target>
 
-    <!-- Defining the target jar which creates a jar file from the compiled classes -->
-    <target name = "jar" depends = "build">
-        <jar destfile = "${jarfile}" basedir = "${build.dir}" />
+    <!-- Create a JAR file from compiled .class files -->
+    <target name="jar" depends="compile">
+        <jar destfile="myArithLib.jar" basedir=".">
+            <include name="arbitaryarithmetic/*.class"/>
+            <include name="myInfArith.class"/>
+        </jar>
     </target>
 
-    <!-- Defining the target run which runs the main class(myInfArith) with example arguments -->
-    <target name="run" depends="build">
-        <java classname="myInfArith" fork="true">
-            <classpath>
-                <pathelement path="${build.dir}" />
-            </classpath>
-            <arg value="int" />
-            <arg value="add" />
-            <arg value="123" />
-            <arg value="456" />
-        </java>
+    <!-- Clean up all generated .class files and jar file-->
+    <target name="clean">
+        <!-- Delete all .class files -->
+        <delete>
+            <fileset dir="." includes="**/*.class"/>
+        </delete>
+        <!-- Delete the generated JAR file -->
+        <delete file="myArithLib.jar"/>
     </target>
+
 </project>
