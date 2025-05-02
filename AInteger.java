@@ -13,13 +13,13 @@ public class AInteger {
 
     // Constructor from String
     public AInteger(String s) {
-        if (s == null || s.isEmpty()) {
+        if (s == null || s.isEmpty()) {      // handling edge case when input is empty
             value = "0";
             isNegative = false;
             return;
         }
     
-        if (s.charAt(0) == '-') {
+        if (s.charAt(0) == '-') {           /* assigning value to isNegative by checking the first character of the input */
             isNegative = true;
             value = s.substring(1);
         } else if (s.charAt(0) == '+') {
@@ -28,6 +28,11 @@ public class AInteger {
         } else {
             isNegative = false;
             value = s;
+        }
+
+        // Validate value: must be all digits
+        if (!value.matches("\\d+")) {
+            throw new IllegalArgumentException("Invalid integer format: " + s);
         }
     
         value = removeLeadingZeros(new StringBuilder(value)).toString();
@@ -53,10 +58,14 @@ public class AInteger {
         return (isNegative ? "-" : "") + value;
     }
 
+
+    // private compare method to compare Unsignedintegers
     private static int compareUnsigned(AInteger a, AInteger b){
         String num1 = a.value;
         String num2 = b.value;
 
+
+        // if a>b returns 1, if a<b returns -1 and 0 if a==b
         if (num1.length() > num2.length()){
             return 1;
         }
@@ -77,6 +86,7 @@ public class AInteger {
        return 0;
     }
 
+    // public compare method to compare integers which calls the Unsignedcompare mathod
     public int compare(AInteger val) {
         if (this.isNegative && !val.isNegative) return -1;
         if (!this.isNegative && val.isNegative) return 1;
@@ -85,13 +95,16 @@ public class AInteger {
         return this.isNegative ? -cmp : cmp;
     }
 
+    // private method to removeLeadingZeros
     private static StringBuilder removeLeadingZeros(StringBuilder str){
-        while (str.length() > 1 && str.charAt(0) == '0') {
+        while (str.length() > 1 && str.charAt(0) == '0') {      //confirming whether the length is atleast 1 or not
             str.deleteCharAt(0);
         }
         return str;
     }
 
+
+    // private method to add two Unsigned integers
     private static AInteger addUnsigned(AInteger a, AInteger b){
         String num1 = a.value;
         String num2 = b.value;
@@ -110,7 +123,7 @@ public class AInteger {
         num2 = new StringBuilder(num2).reverse().toString(); // Reverse the second number
 
         for(int i=0;i<maxlength;i++){
-            int digit1 = i<num1.length() ? num1.charAt(i)-'0' : 0 ;
+            int digit1 = i<num1.length() ? num1.charAt(i)-'0' : 0 ; // getting the numeric value by subtracting '0'
             int digit2 = i<num2.length() ? num2.charAt(i)-'0' : 0 ;
 
             int sum = digit1 + digit2 + carry;
@@ -123,9 +136,11 @@ public class AInteger {
             result.append(carry); // If there's a remaining carry, append it
         }
 
+        // return result as new AInteger
         return new AInteger(result.reverse().toString());
     }
 
+    // private method to subtract two Unsigned integers
     private static AInteger subUnsigned(AInteger a, AInteger b) {
         String num1 = a.value;
         String num2 = b.value;
@@ -133,11 +148,12 @@ public class AInteger {
         StringBuilder result = new StringBuilder();
         int borrow = 0;
     
+        //Assigning index of unit digits to i and j
         int i = num1.length() - 1;
         int j = num2.length() - 1;
     
         while (i >= 0) {
-            int digit1 = num1.charAt(i) - '0';
+            int digit1 = num1.charAt(i) - '0';                  // getting the numeric value by subtracting '0'
             int digit2 = (j >= 0) ? num2.charAt(j) - '0' : 0;
     
             int diff = digit1 - digit2 - borrow;
@@ -156,9 +172,11 @@ public class AInteger {
         result.reverse();
         removeLeadingZeros(result);
     
+        // return the result as new AInteger
         return new AInteger(result.toString());
     }
 
+    // private method to multiply two Unsigned integers
     private static AInteger mulUnsigned(AInteger a, AInteger b) {
         String num1 = a.value;
         String num2 = b.value;
@@ -185,30 +203,32 @@ public class AInteger {
         for (int num : result) {
             // Skip leading zeroes
             if (!(resultStr.length() == 0 && num == 0)) {
-                resultStr.append(num); // Append each non-zero digit
+                resultStr.append(num); // Append each digit just after the length is 1
             }
         }
 
-        // Return the result as a new AInteger
+        // Return the result as new AInteger
         return new AInteger(resultStr.length() == 0 ? "0" : resultStr.toString());
     }
 
+    // private method to divide two Unsigned integers
     private static AInteger divUnsigned(AInteger a, AInteger b){
         String dividend = a.value;
         String divisor = b.value;
 
         if (divisor.equals("0")) {
-            throw new ArithmeticException("Division by zero");
+            throw new ArithmeticException("Division by zero");      //Division by zero is not allowed
         }
-    
-        StringBuilder quotient = new StringBuilder();
-        String current = "";
 
+        StringBuilder quotient = new StringBuilder();
+        String current = "";        // holds the portion of dividend being divided
+
+        // Iterate over each digit of the dividend (simulating manual long division)
         for (int i = 0; i < dividend.length(); i++) {
             current += dividend.charAt(i);
 
             // Remove leading zeros
-            current = current.replaceFirst("^0+", "");
+            current = removeLeadingZeros(new StringBuilder(current)).toString();
             if (current.equals("")) current = "0";
 
             int x = 0;
@@ -217,18 +237,21 @@ public class AInteger {
             
             while (compareUnsigned(curInt, divInt) >= 0) {
                 curInt = subUnsigned(curInt, divInt);
-                x++;
+                x++;        // count how many times the divisor fits in dividend
             }
 
             quotient.append(x);
-            current = curInt.getValue();
+            current = curInt.getValue();        // assign the remainder vakue to current
         }
 
         String result = removeLeadingZeros(quotient).toString();
+        
+        // Return result as new AInteger
         return new AInteger(result);
 
     }
 
+    // public add method to add two integers
     public AInteger add(AInteger val) {
         if (this.isNegative == val.isNegative) {
             // Same signs: perform addition and preserve the sign
@@ -249,23 +272,29 @@ public class AInteger {
         }
     }
 
+    // public subtraction method to subtract two integers 
     public AInteger sub(AInteger val) {
+        // changing the isNegative attribute and calling addUnsigned
         AInteger negVal = new AInteger(val);
         negVal.isNegative = !val.isNegative;
         return this.add(negVal);
     }
 
+    // public multiplication method for two integers
     public AInteger mul(AInteger val) {
-        AInteger result = mulUnsigned(this, val);
+        AInteger result = mulUnsigned(this, val);       // calling mulUnsigned and changing isNegative accordingly
         result.isNegative = this.isNegative != val.isNegative;
         return result;
     }
 
+
+    // public division method for two integers
     public AInteger div(AInteger val) {
         if (val.value.equals("0")) {
             throw new ArithmeticException("Division by zero");
         }
-    
+
+        // calling divUnsigned and changing isNegative accordingly
         AInteger result = divUnsigned(this, val);
         result.isNegative = this.isNegative != val.isNegative;
         return result;
