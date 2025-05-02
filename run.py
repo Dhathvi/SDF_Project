@@ -7,6 +7,7 @@ import subprocess
 print("compiling in progressss.......⏳")
 compileCmd="javac arbitaryarithmetic/*.java myInfArith.java"
 
+#confirming no errors while compilation
 if os.system(compileCmd) !=0:
     print("compilation failed sorry😔")
     sys.exit(1)
