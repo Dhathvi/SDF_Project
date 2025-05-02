@@ -11,7 +11,7 @@
 
     <!-- Create a JAR file from compiled .class files -->
     <target name="jar" depends="compile">
-        <jar destfile="myArithLib.jar" basedir=".">
+        <jar destfile="arbitaryarithmetic/myArithLib.jar" basedir=".">
             <include name="arbitaryarithmetic/*.class"/>
             <include name="myInfArith.class"/>
         </jar>
@@ -24,7 +24,7 @@
             <fileset dir="." includes="**/*.class"/>
         </delete>
         <!-- Delete the generated JAR file -->
-        <delete file="myArithLib.jar"/>
+        <delete file="arbitaryarithmetic/myArithLib.jar"/>
     </target>
 
     <target name="run" depends="compile">
