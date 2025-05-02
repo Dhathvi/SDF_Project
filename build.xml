@@ -30,10 +30,10 @@
     <target name="run" depends="compile">
     <java classname="myInfArith" fork="true">
         <classpath path="."/>
-        <arg value="int"/>
-        <arg value="add"/>
-        <arg value="3.14"/>
-        <arg value="2.86"/>
+        <arg value="${arg1}"/>
+        <arg value="${arg2}"/>
+        <arg value="${arg3}"/>
+        <arg value="${arg4}"/>
     </java>
 </target>
 
