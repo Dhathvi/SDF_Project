@@ -1,4 +1,4 @@
-# SDF Project – Arbitrary Precision Integer & Float Calculator  hi
+# SDF Project – Arbitrary Precision Integer & Float Calculator
 
 Hello! This is my project for SDF course (CS1023) where I made a calculator for very large numbers.
 It supports both **Integer** and **decimal(Float)** type values
@@ -44,7 +44,7 @@ Like, even if the number has 50 digits or decimal with 30 places, still this wil
         for floats
             java myInfArith float div 1.234 0.0001
 
-    Using Python "if you're lazy 😁 or if you don't know how to compile using java."
+    Using Python "if you're lazy or if you don't know how to compile using java."
 
         for int
             python3 run.py int mul 99999 88888
