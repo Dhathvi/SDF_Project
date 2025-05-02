@@ -1,17 +1,20 @@
 <project name = "ArbitaryArithmetic" default = "build" basedir = ".">
     <property name="src.dir" value = "." />
-    <property name="build.dir" value = "build/classes" />
+    <property name="build.dir" value = "build/classes" />  <!-- Defining where to store compiled class files -->
     <property name="jarfile" value = "aarithmetic.jar" />
 
+    <!-- Defining the target clean which deletes all compiled .class files and the jar file -->
     <target name = "clean">
         <delete dir = "${build.dir}" />
         <delete file = "${jarfile}" />
     </target>
 
+    <!-- Defining the target init to create build directory if it doesnot exist -->
     <target name = "init">
         <mkdir dir = "${build.dir}"/>
     </target>
 
+    <!-- Defining the target build which compiles all the .java files  -->
     <target name = "build" depends = "init">
         <javac destdir="${build.dir}">
             <src path = "${src.dir}" />
@@ -19,10 +22,12 @@
         </javac>
     </target>
 
+    <!-- Defining the target jar which creates a jar file from the compiled classes -->
     <target name = "jar" depends = "build">
         <jar destfile = "${jarfile}" basedir = "${build.dir}" />
     </target>
 
+    <!-- Defining the target run which runs the main class(myInfArith) with example arguments -->
     <target name="run" depends="build">
         <java classname="myInfArith" fork="true">
             <classpath>
