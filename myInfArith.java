@@ -9,13 +9,13 @@ public class myInfArith {
             return;
         }
 
-        String type = args[0].toLowerCase();
+        String type = args[0].toLowerCase();      // converting args tolowercase for better usage.
         String operation = args[1].toLowerCase();
         String op1 = args[2];
         String op2 = args[3];
 
         try {
-            if (type.equals("int")) {
+            if (type.equals("int")) {               // calling the appropriate method for given type and operation
                 AInteger a = new AInteger(op1);
                 AInteger b = new AInteger(op2);
                 AInteger result;
@@ -31,7 +31,7 @@ public class myInfArith {
                 }
 
                 System.out.println(result.getValue());
-            } else if (type.equals("float")) {
+            } else if (type.equals("float")) {      // calling the appropriate method for given type and operation
                 AFloat a = new AFloat(op1);
                 AFloat b = new AFloat(op2);
                 AFloat result;
